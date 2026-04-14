@@ -12,6 +12,7 @@
 
 
 теперь в браузере пиши localhost/название_папки_проекта/index.php - главная страница, можешь зарегать для теста нового пользователя и тд
+
 <img width="367" height="119" alt="image" src="https://github.com/user-attachments/assets/640364ac-dbd4-438e-a553-b3d5fb8e6614" />
 
 
