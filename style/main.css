@@ -1,0 +1,448 @@
+/* Общие стили */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f9f9f9;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Шапка (Header) */
+.header {
+    background-color: #fff;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: 2px;
+}
+
+.logo span {
+    color: #bfa37e; /* Золотистый цвет */
+}
+
+.nav ul {
+    display: flex;
+    list-style: none;
+    align-items: center;
+}
+
+.nav ul li {
+    margin-left: 30px;
+}
+
+.nav ul li a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 400;
+    transition: color 0.3s;
+}
+
+.nav ul li a:hover, .nav ul li a.active {
+    color: #bfa37e;
+}
+
+.btn-login {
+    border: 2px solid #bfa37e;
+    padding: 8px 20px;
+    border-radius: 5px;
+    transition: all 0.3s !important;
+}
+
+.btn-login:hover {
+    background-color: #bfa37e;
+    color: #fff !important;
+}
+
+/* Главный баннер (Hero) */
+.hero {
+    height: 90vh;
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
+                url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #fff;
+}
+
+.hero-content h1 {
+    font-size: 48px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
+
+.hero-content p {
+    font-size: 20px;
+    margin-bottom: 30px;
+}
+
+.btn-main {
+    display: inline-block;
+    padding: 15px 40px;
+    background-color: #bfa37e;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+.btn-main:hover {
+    background-color: #a38a68;
+}
+
+/* О нас (About) */
+.about {
+    padding: 80px 0;
+}
+
+.about h2 {
+    text-align: center;
+    font-size: 36px;
+    margin-bottom: 50px;
+}
+
+.about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    align-items: center;
+}
+
+.about-text p {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.features {
+    list-style: none;
+}
+
+.features li {
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #555;
+}
+
+.about-image img {
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+/* Футер */
+.footer {
+    background-color: #222;
+    color: #fff;
+    padding: 40px 0;
+    text-align: center;
+}
+
+.footer p {
+    margin-bottom: 10px;
+    opacity: 0.7;
+}
+
+/* Мобильная адаптивность */
+@media (max-width: 768px) {
+    .about-grid {
+        grid-template-columns: 1fr;
+    }
+    .hero-content h1 {
+        font-size: 32px;
+    }
+    .nav ul li {
+        margin-left: 15px;
+        font-size: 14px;
+    }
+}
+
+
+/* Страница номеров */
+.rooms-page {
+    padding: 60px 0;
+    background-color: #f4f4f4;
+}
+
+.rooms-page h1 {
+    text-align: center;
+    margin-bottom: 40px;
+    font-weight: 600;
+}
+
+/* Фильтры */
+.filters {
+    background: #fff;
+    padding: 20px 30px;
+    border-radius: 8px;
+    display: flex;
+    gap: 30px;
+    align-items: flex-end;
+    margin-bottom: 40px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.filter-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.filter-item label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #777;
+}
+
+.filter-item select {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-family: 'Montserrat', sans-serif;
+    min-width: 150px;
+}
+
+.btn-filter {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 11px 25px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-filter:hover {
+    background-color: #bfa37e;
+}
+
+/* Карточки номеров */
+.rooms-list {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.room-card {
+    background: #fff;
+    display: grid;
+    grid-template-columns: 400px 1fr;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+
+.room-slider {
+    position: relative;
+    height: 100%;
+}
+
+.room-slider img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.slider-arrows {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 15px;
+    transform: translateY(-50%);
+}
+
+.slider-arrows span {
+    background: rgba(255,255,255,0.7);
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.room-info {
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+}
+
+.room-info h2 {
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+
+.room-meta {
+    color: #bfa37e;
+    font-weight: 600;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.room-amenities {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.room-amenities li {
+    font-size: 14px;
+    color: #666;
+    position: relative;
+    padding-left: 20px;
+}
+
+.room-amenities li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: #bfa37e;
+}
+
+.room-footer {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+}
+
+.room-price {
+    font-size: 16px;
+    color: #777;
+}
+
+.room-price span {
+    display: block;
+    font-size: 24px;
+    color: #333;
+    font-weight: 600;
+}
+
+.btn-book {
+    background-color: #bfa37e;
+    color: #fff;
+    text-decoration: none;
+    padding: 12px 30px;
+    border-radius: 5px;
+    font-weight: 600;
+    transition: background 0.3s;
+}
+
+.btn-book:hover {
+    background-color: #a38a68;
+}
+
+/* Адаптивность для карточек */
+@media (max-width: 900px) {
+    .room-card {
+        grid-template-columns: 1fr;
+    }
+    .room-slider {
+        height: 250px;
+    }
+    .filters {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+
+
+/* Стили для страниц авторизации */
+.auth-body {
+    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+                url('https://images.unsplash.com/photo-1451153378752-16ef2b36ad05?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
+    background-size: cover;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.auth-container {
+    background: #fff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    width: 100%;
+    max-width: 400px;
+}
+
+.auth-form h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #333;
+}
+
+.auth-form input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.auth-form .btn-main {
+    width: 100%;
+    cursor: pointer;
+    border: none;
+}
+
+.auth-link {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+.auth-link a {
+    color: #bfa37e;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.error {
+    background: #ffebee;
+    color: #c62828;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    text-align: center;
+}
