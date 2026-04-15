@@ -26,14 +26,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $total_price = $days * $room['price'];
 
         // Проверка занятости
-        $stmt = $pdo->prepare("SELECT COUNT(*) FROM bookings WHERE room_id = ? AND NOT (check_out <= ? OR check_in >= ?)");
+        $stmt = $pdo->prepare("
+            SELECT COUNT(*) FROM bookings 
+            WHERE room_id = ? 
+            AND payment_status != 'Отменено' 
+            AND NOT (check_out <= ? OR check_in >= ?)
+        ");
+        
         $stmt->execute([$room_id, $check_in, $check_out]);
-        if ($stmt->fetchColumn() > 0) {
-            $error = "Этот период уже занят.";
+        $is_busy = $stmt->fetchColumn();
+
+        if ($is_busy > 0) {
+            $error = "К сожалению, на выбранные даты номер уже забронирован другим гостем.";
         } else {
-            $stmt = $pdo->prepare("INSERT INTO bookings (user_id, guest_name, room_id, check_in, check_out, total_price) VALUES (?, ?, ?, ?, ?, ?)");
+            // Если занятых броней не нашли (или нашли только отмененные) — бронируем
+            $stmt = $pdo->prepare("
+                INSERT INTO bookings (user_id, guest_name, room_id, check_in, check_out, total_price, payment_status) 
+                VALUES (?, ?, ?, ?, ?, ?, 'Ожидает')
+            ");
             $stmt->execute([$_SESSION['user_id'], $_SESSION['username'], $room_id, $check_in, $check_out, $total_price]);
-            $success = "Забронировано! Итоговая сумма: " . number_format($total_price, 0, '', ' ') . " ₽";
+            $success = "Номер успешно забронирован! Итоговая сумма: " . number_format($total_price, 0, '', ' ') . " ₽";
         }
     }
 }

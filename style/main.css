@@ -446,3 +446,18 @@ body {
     font-size: 14px;
     text-align: center;
 }
+
+.status-cancel {
+    background: #ffebee; /* светло-красный */
+    color: #c62828;      /* темно-красный */
+    border: 1px solid #ef9a9a;
+}
+
+/* Сделаем кнопки в таблице чуть аккуратнее */
+.btn-action {
+    display: inline-block;
+    margin-right: 5px;
+    padding: 5px 10px;
+    font-size: 11px;
+    text-transform: uppercase;
+}

@@ -17,10 +17,11 @@ $user = $stmt->fetch();
 
 // Получаем бронирования этого пользователя
 $stmt = $pdo->prepare("
-    SELECT b.*, r.name as room_name, total_price 
+    SELECT b.*, r.name as room_name, r.price 
     FROM bookings b 
     JOIN rooms r ON b.room_id = r.id 
-    WHERE b.user_id = ?
+    WHERE b.user_id = ? AND b.payment_status != 'Отменено'
+    ORDER BY b.id DESC
 ");
 $stmt->execute([$user_id]);
 $my_bookings = $stmt->fetchAll();
@@ -56,7 +57,8 @@ $my_bookings = $stmt->fetchAll();
             <div class="logo">HOTEL<span>PREMIUM</span></div>
             <nav class="nav">
                 <ul>
-                    <li><a href="index.php">На главную</a></li>
+                    <li><a href="index.php">Главная</a></li>
+                    <li><a href="rooms.php">Номера и цены</a></li>
                     <li><a href="logout.php" class="btn-login">Выйти</a></li>
                 </ul>
             </nav>
