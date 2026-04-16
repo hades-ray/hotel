@@ -98,7 +98,38 @@ $stmtIncome = $pdo->prepare("
 $stmtIncome->execute([$currentMonth]);
 $monthlyIncome = $stmtIncome->fetchColumn() ?: 0;
 
-// ... существующий код получения данных для таблиц ...
+if (isset($_POST['add_room'])) {
+    $name = $_POST['name'];
+    $max_guests = (int)$_POST['max_guests'];
+    $price = (float)$_POST['price'];
+    $description = $_POST['description'];
+
+    // Обработка загрузки файла
+    if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
+        $img_name = $_FILES['image']['name'];
+        $tmp_name = $_FILES['image']['tmp_name'];
+        
+        // Путь для сохранения (папка img/rooms в корне проекта)
+        $upload_dir = 'img/rooms/';
+        
+        // Генерируем уникальное имя, чтобы не перезаписать файлы с одинаковыми именами
+        $unique_name = time() . '_' . $img_name;
+        $target_path = $upload_dir . $unique_name;
+
+        if (move_uploaded_file($tmp_name, $target_path)) {
+            // Сохраняем в БД (только имя файла)
+            $stmt = $pdo->prepare("INSERT INTO rooms (name, price, description, max_guests, image_url, status) VALUES (?, ?, ?, ?, ?, 'active')");
+            $stmt->execute([$name, $price, $description, $max_guests, $unique_name]);
+            
+            header("Location: admin.php?success=1");
+            exit;
+        } else {
+            $error_msg = "Ошибка при загрузке файла на сервер.";
+        }
+    } else {
+        $error_msg = "Пожалуйста, выберите изображение.";
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -176,7 +207,37 @@ $monthlyIncome = $stmtIncome->fetchColumn() ?: 0;
             </div>
         </div>
 
+        <section class="admin-section">
+            <h2>Добавить новый номер</h2>
 
+            <?php if(isset($error_msg)): ?>
+                <p class="error"><?= $error_msg ?></p>
+            <?php endif; ?>
+            
+            <!-- Важно: enctype="multipart/form-data" необходим для загрузки файлов -->
+            <form action="admin.php" method="POST" enctype="multipart/form-data" class="add-room-form">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div>
+                        <label>Название номера:</label>
+                        <input type="text" name="name" placeholder="Например: Люкс с балконом" required style="width:100%; padding:10px; margin-bottom:15px;">
+
+                        <label>Макс. количество гостей:</label>
+                        <input type="number" name="max_guests" value="2" min="1" required style="width:100%; padding:10px; margin-bottom:15px;">
+
+                        <label>Цена за сутки (₽):</label>
+                        <input type="number" name="price" placeholder="5000" required style="width:100%; padding:10px; margin-bottom:15px;">
+                    </div>
+                    <div>
+                        <label>Описание номера:</label>
+                        <textarea name="description" rows="4" placeholder="Опишите удобства..." required style="width:100%; padding:10px; margin-bottom:15px; font-family: 'Montserrat';"></textarea>
+
+                        <label>Фотография номера:</label>
+                        <input type="file" name="image" accept="image/*" required style="margin-bottom:15px;">
+                    </div>
+                </div>
+                <button type="submit" name="add_room" class="btn-main" style="width: auto; padding: 10px 30px; border:none; cursor:pointer;">Добавить номер</button>
+            </form>
+        </section>
 
         <!-- Управление номерами -->
         <section class="admin-section">
@@ -242,30 +303,34 @@ $monthlyIncome = $stmtIncome->fetchColumn() ?: 0;
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($bookings as $b): ?>
-                    <tr>
+                    <?php 
+                    $counter = 0; 
+                    foreach ($bookings as $b): 
+                        $counter++;
+                        // Если номер строки больше 5, добавляем класс скрытия
+                        $rowClass = ($counter > 5) ? 'booking-row-hidden' : '';
+                    ?>
+                    <tr class="<?= $rowClass ?>">
                         <td><?= htmlspecialchars($b['guest_name']) ?></td>
-                        <td><?= $b['room_name'] ?></td>
+                        <td><?= htmlspecialchars($b['room_name']) ?></td>
                         <td><?= $b['check_in'] ?></td>
                         <td><?= $b['check_out'] ?></td>
                         <td><strong><?= number_format($b['total_price'], 0, '.', ' ') ?> ₽</strong></td>
                         <td>
-                            <!-- Добавляем цвет для статуса "Отменено" -->
                             <?php 
-                                $class = '';
-                                if ($b['payment_status'] == 'Оплачено') $class = 'status-paid';
-                                if ($b['payment_status'] == 'Ожидает') $class = 'status-wait';
-                                if ($b['payment_status'] == 'Отменено') $class = 'status-cancel';
+                                $statusClass = '';
+                                if ($b['payment_status'] == 'Оплачено') $statusClass = 'status-paid';
+                                if ($b['payment_status'] == 'Ожидает') $statusClass = 'status-wait';
+                                if ($b['payment_status'] == 'Отменено') $statusClass = 'status-cancel';
                             ?>
-                            <span class="status-badge <?= $class ?>"><?= $b['payment_status'] ?></span>
+                            <span class="status-badge <?= $statusClass ?>"><?= $b['payment_status'] ?></span>
                         </td>
                         <td>
-                            <!-- Ссылки-кнопки для управления -->
                             <?php if ($b['payment_status'] !== 'Отменено'): ?>
                                 <?php if ($b['payment_status'] === 'Ожидает'): ?>
-                                    <a href="admin.php?action=confirm&id=<?= $b['id'] ?>" class="btn-action btn-edit" style="text-decoration:none;">Оплачено</a>
+                                    <a href="admin.php?action=confirm&id=<?= $b['id'] ?>" class="btn-action btn-edit">Оплачено</a>
                                 <?php endif; ?>
-                                <a href="admin.php?action=cancel&id=<?= $b['id'] ?>" class="btn-action btn-danger" style="text-decoration:none;" onclick="return confirm('Отменить бронирование?')">Отмена</a>
+                                <a href="admin.php?action=cancel&id=<?= $b['id'] ?>" class="btn-action btn-danger" style="text-decoration: none;" onclick="return confirm('Отменить?')">Отмена</a>
                             <?php else: ?>
                                 <span style="color:#999; font-size:12px;">Действий нет</span>
                             <?php endif; ?>
@@ -274,8 +339,25 @@ $monthlyIncome = $stmtIncome->fetchColumn() ?: 0;
                     <?php endforeach; ?>
                 </tbody>
             </table>
+            <?php if (count($bookings) > 5): ?>
+                <button id="showMoreBtn" class="btn-reveal" onclick="revealHistory()">Раскрыть историю</button>
+            <?php endif; ?>
         </section>
     </div>
 
+    <script>
+    function revealHistory() {
+        // Находим все скрытые строки
+        const hiddenRows = document.querySelectorAll('.booking-row-hidden');
+                
+        // Перебираем их и меняем стиль отображения на стандартный для строк таблицы
+        hiddenRows.forEach(row => {
+            row.style.display = 'table-row';
+        });
+
+        // Скрываем саму кнопку после нажатия
+        document.getElementById('showMoreBtn').style.display = 'none';
+    }
+    </script>
 </body>
 </html>

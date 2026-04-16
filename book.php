@@ -105,7 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </div>
 
                 <label>Количество гостей:</label>
-                <select name="guests">
+                <select name="guests" style="margin-bottom: 20px;">
                     <?php for($i=1; $i<=$room['max_guests']; $i++): ?>
                         <option value="<?= $i ?>"><?= $i ?> чел.</option>
                     <?php endfor; ?>
