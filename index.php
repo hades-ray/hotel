@@ -51,7 +51,7 @@
                     </ul>
                 </div>
                 <div class="about-image">
-                    <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Интерьер отеля">
+                    <img src="img/about.jpg" alt="Интерьер отеля">
                 </div>
             </div>
         </div>

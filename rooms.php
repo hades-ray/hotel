@@ -38,19 +38,23 @@ $rooms = $pdo->query("SELECT * FROM rooms WHERE status = 'active'")->fetchAll();
             <div class="rooms-list">
                 <?php foreach ($rooms as $room): ?>
                 <article class="room-card">
-                    <img src="<?= $room['image_url'] ?>" alt="<?= $room['name'] ?>" style="width:400px; object-fit:cover;">
+                    <!-- ИЗМЕНЕНО: Путь теперь ведет в локальную папку img/rooms/ -->
+                    <img src="img/rooms/<?= htmlspecialchars($room['image_url']) ?>" 
+                         alt="<?= htmlspecialchars($room['name']) ?>" 
+                         style="width:400px; height: 300px; object-fit:cover;">
+                    
                     <div class="room-info">
-                        <h2><?= $room['name'] ?></h2>
+                        <h2><?= htmlspecialchars($room['name']) ?></h2>
                         <p class="room-meta">До <?= $room['max_guests'] ?> гостей</p>
-                        <p><?= $room['description'] ?></p>
+                        <p><?= htmlspecialchars($room['description']) ?></p>
                         <div class="room-footer">
-                            <div class="room-price"><span>от <?= number_format($room['price'], 0, '', ' ') ?> ₽</span> / сутки</div>
+                            <div class="room-price">
+                                <span>от <?= number_format($room['price'], 0, '', ' ') ?> ₽</span> / сутки
+                            </div>
                             
                             <?php if(isset($_SESSION['user_id'])): ?>
-                                <!-- Если авторизован, открываем форму -->
                                 <a href="book.php?room_id=<?= $room['id'] ?>" class="btn-book">Забронировать</a>
                             <?php else: ?>
-                                <!-- Если нет, отправляем логиниться -->
                                 <a href="login.php" class="btn-book" onclick="alert('Пожалуйста, войдите в аккаунт для бронирования');">Забронировать</a>
                             <?php endif; ?>
                         </div>
@@ -60,5 +64,11 @@ $rooms = $pdo->query("SELECT * FROM rooms WHERE status = 'active'")->fetchAll();
             </div>
         </div>
     </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; <?= date('Y') ?> Hotel Premium. Все права защищены.</p>
+        </div>
+    </footer>
 </body>
 </html>
